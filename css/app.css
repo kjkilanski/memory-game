@@ -81,6 +81,11 @@ h1 {
     font-size: 33px;
 }
 
+.deck .card.complete {
+    cursor: default;
+    background: #ff5733;
+    font-size: 33px;
+}
 /*
  * Styles for the Score Panel
  */

@@ -14,7 +14,9 @@
 //
 const card = document.getElementsByClassName('card');
 const cards = [...card];
+let numMoves = 0;
 let numMatches = 0;
+let openList = [];
 
 function startGame() {
 
@@ -27,8 +29,6 @@ function startGame() {
   }
 
 startGame();
-
-
 
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
@@ -62,11 +62,9 @@ function shuffle(array) {
  function flipCard() {
    this.classList.toggle('open');
    this.classList.toggle('show');
-   //this.classList.toggle('match');
 
  }
 
- let openList = [];
 
  for (var i = 0; i < cards.length; i++){
    //need to prevent third click
@@ -75,7 +73,8 @@ function shuffle(array) {
     cards[0].addEventListener('click', startTimer, false);
  };
 
-let numMoves = 0;
+
+
 // Create an array and check for match
 
 function matchCards() {
@@ -87,7 +86,7 @@ function matchCards() {
     if (openList[0].firstElementChild.className == openList[1].firstElementChild.className) {
       match();
     } else {
-        const resetTimer = setTimeout(reset, 2000);
+        const resetTimer = setTimeout(reset, 1500);
     }
   }
 }
@@ -109,6 +108,10 @@ function match() {
   numMatches++;
 
   if (numMatches == 8) {
+      for (var i = 0; i < cards.length; i++) {
+          cards[i].classList.toggle('complete');
+      }
+
     end();
   }
   openList = [];
@@ -120,6 +123,11 @@ function moveCounter() {
 }
 
 
+/*
+* Time counter for counting the amount of time from the first selection to when all cards match
+* This code has been adapted from a solution at https://stackoverflow.com/questions/41632942/how-to-measure-time-elapsed-on-javascript
+* Changes to the code include updating to 'let' rather than 'var', and changing function names to something more consistent with my own style
+*/
 
 let startTime;
 let endTime;
@@ -136,7 +144,7 @@ function end() {
 
   // get seconds
   const seconds = Math.round(timeDiff);
-  console.log(seconds + " seconds");
+  console.log(seconds + " seconds"); //remove this once completion page is in place
 }
 
 
