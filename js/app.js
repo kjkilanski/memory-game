@@ -14,6 +14,7 @@
 //
 const card = document.getElementsByClassName('card');
 const cards = [...card];
+let numMatches = 0;
 
 function startGame() {
 
@@ -65,26 +66,29 @@ function shuffle(array) {
 
  }
 
- let openList =[];
+ let openList = [];
 
  for (var i = 0; i < cards.length; i++){
+   //need to prevent third click
     cards[i].addEventListener('click', flipCard, false);
     cards[i].addEventListener('click', matchCards, false);
-  //  cards[i].addEventListener('click', test, false);
+    cards[0].addEventListener('click', startTimer, false);
  };
 
+let numMoves = 0;
 // Create an array and check for match
+
 function matchCards() {
   openList.push(this);
   console.log(openList);
   if (openList.length === 2) {
+    moveCounter();
+    console.log(numMoves);
     if (openList[0].firstElementChild.className == openList[1].firstElementChild.className) {
-      console.log('equal');
       match();
     } else {
-        const resetTimer = setTimeout(reset, 3000);
+        const resetTimer = setTimeout(reset, 2000);
     }
-
   }
 }
 
@@ -92,11 +96,9 @@ function matchCards() {
 function reset() {
         const cls = ['show', 'open'];
         const elements = openList;
-        //console.log(openList);
         for (var i = 0; i < openList.length; i++) {
           openList[i].classList.remove(...cls);
         }
-
         openList = [];
 }
 
@@ -104,12 +106,38 @@ function reset() {
 function match() {
   openList[0].classList.toggle('match');
   openList[1].classList.toggle('match');
+  numMatches++;
+
+  if (numMatches == 8) {
+    end();
+  }
   openList = [];
+}
+
+function moveCounter() {
+  numMoves++;
+  return numMoves;
 }
 
 
 
+let startTime;
+let endTime;
 
+function startTimer() {
+  startTime = new Date();
+};
+
+function end() {
+  endTime = new Date();
+  let timeDiff = endTime - startTime; //in ms
+  // strip the ms
+  timeDiff /= 1000;
+
+  // get seconds
+  const seconds = Math.round(timeDiff);
+  console.log(seconds + " seconds");
+}
 
 
 
