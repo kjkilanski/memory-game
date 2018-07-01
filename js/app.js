@@ -15,6 +15,8 @@
 const card = document.getElementsByClassName('card');
 const cards = [...card];
 const modal = document.querySelector('.modal');
+let cls;
+let elements;
 
 let numMoves = 0;
 let numMatches = 0;
@@ -111,8 +113,8 @@ function matchCards() {
 
 // Reset the matched cards array
 function reset() {
-        const cls = ['show', 'open'];
-        const elements = openList;
+        cls = ['show', 'open'];
+        elements = openList;
         for (var i = 0; i < openList.length; i++) {
           openList[i].classList.remove(...cls);
         }
@@ -183,20 +185,21 @@ function showModal() {
 }
 
 function gameReset() {
+  // reset variables and display; restart game
   startTime = undefined;
   endTime = undefined;
   numMoves = 0;
-  console.log('test');
+  numMatches = 0;
+  numClicks = 0;
   modal.style.display ='none';
+  cls = ['complete', 'open', 'show', 'match'];
+  elements = completeList;
 
-  const cls = ['complete', 'open', 'show', 'match'];
-  const elements = completeList;
   for (var i = 0; i < completeList.length; i++) {
     completeList[i].classList.remove(...cls);
   }
-  // reset variables
+  
   completeList = [];
-  numMatches = 0;
-  numClicks = 0;
   const restartGame = setTimeout(startGame, 250);
+
 }
