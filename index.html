@@ -25,7 +25,7 @@
 
         	<span class="moves">3</span> Moves
 
-            <div class="restart">
+            <div class="reset-me restart">
         		<i class="fa fa-repeat"></i>
         	</div>
         </section>
@@ -85,14 +85,19 @@
     <div class="modal" id="modal">
       <div class="modal-content">
         <h1 class='modal-heading'>Congratulations! You WON!</h1>
+        <h2 class='modal-subheading'>It took you <i id="clicks"></i> clicks, <i id="moves"></i> moves, and <i id="time"></i> seconds to win!</h2>
         <div class='modal-table'>
-          <div class='number-stars'>
-            <div class="stat-name">Item Description</div>
-            <div class="stat">Add</div>
+          <div class='number-moves'>
+            <div class="stat-moves">Moves: </div>
+            <div class="moves-stat"></div>
           </div>
           <div class='time-amount'>
-            <div class="stat-name">Item Description</div>
-            <div class="stat">Add</div>
+            <div class="stat-time">Time: </div>
+            <div class="time-stat"></div>
+          </div>
+          <div class='number-stars'>
+            <div class="stat-stars">Stars: </div>
+            <div class="star-stat"></div>
           </div>
           <div class='reset-me'>
             Reset

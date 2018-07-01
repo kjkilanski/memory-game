@@ -12,12 +12,15 @@
 //  */
 // const deck = document.querySelector('.deck');
 //
+const deck = document.querySelector('.deck');
 const card = document.getElementsByClassName('card');
 const cards = [...card];
 const modal = document.querySelector('.modal');
-let cls;
-let elements;
+const resetBtn = document.getElementsByClassName('reset-me');
+const clicks = 0;
 
+let cardSelection;
+let cls;
 let numMoves = 0;
 let numMatches = 0;
 let numClicks = 0;
@@ -25,6 +28,8 @@ let openList = [];
 let completeList = [];
 let startTime;
 let endTime;
+let seconds;
+
 
 /* The startGame() function starts the game
 * The function creates a new deck based on the CSS class 'deck', the ul with the class 'deck';
@@ -33,7 +38,6 @@ let endTime;
 */
 function startGame() {
 
-  const deck = document.querySelector('.deck');
   const cardShuffle = shuffle(cards);
   for (var i = 0; i < cardShuffle.length; i++){
         deck.appendChild(cardShuffle[i]);
@@ -73,11 +77,13 @@ function shuffle(array) {
 
 
  function eventListeners(){
-   const clicks = 0;
-
-   for (var i = 0; i < cards.length; i++){
+   for (let i = 0; i < cards.length; i++){
       cards[i].addEventListener('click', clickCount, false);
       cards[i].addEventListener('click', matchCards, false);
+      for (let i =0; i < resetBtn.length; i++) {
+        resetBtn[i].addEventListener('click', gameReset, false);
+      }
+
    };
  }
 
@@ -168,21 +174,23 @@ function startTimer() {
 
 function endTimer() {
   endTime = new Date();
-  let timeDiff = endTime - startTime; //in ms
-  // strip the ms
-  timeDiff /= 1000;
+  let timeDiff = endTime - startTime; // in ms
+  timeDiff /= 1000; // strip the ms
 
   // get seconds
-  const seconds = Math.round(timeDiff);
+  seconds = Math.round(timeDiff);
   console.log(seconds + " seconds"); //remove this once completion page is in place
+  return seconds;
 }
 
 function showModal() {
   modal.style.display ='block';
-  const resetBtn = document.querySelector('.reset-me');
-  console.log(resetBtn);
-  resetBtn.addEventListener('click', gameReset, false);
+  document.getElementById('clicks').innerHTML = numClicks;
+  document.getElementById('moves').innerHTML = numMoves;
+  document.getElementById('time').innerHTML = seconds;
+  //resetBtn.addEventListener('click', gameReset, false);
 }
+
 
 function gameReset() {
   // reset variables and display; restart game
@@ -193,12 +201,15 @@ function gameReset() {
   numClicks = 0;
   modal.style.display ='none';
   cls = ['complete', 'open', 'show', 'match'];
-  elements = completeList;
+
+  for (var i = 0; i < cards.length; i++) {
+    cards[i].classList.remove(...cls);
+  }
 
   for (var i = 0; i < completeList.length; i++) {
     completeList[i].classList.remove(...cls);
   }
-  
+
   completeList = [];
   const restartGame = setTimeout(startGame, 250);
 
