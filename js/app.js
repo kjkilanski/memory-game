@@ -20,6 +20,7 @@ let numMoves = 0;
 let numMatches = 0;
 let numClicks = 0;
 let openList = [];
+let completeList = [];
 let startTime;
 let endTime;
 
@@ -89,6 +90,7 @@ function shuffle(array) {
 function matchCards() {
   cardSelection = this;
   openList.push(this);
+
   //prevent flipping on click for third card
   if (openList.length <= 2) {
     flipCard();
@@ -125,7 +127,9 @@ function match() {
  console.log(numMatches);
   if (numMatches == 8) {
       for (var i = 0; i < cards.length; i++) {
+
           cards[i].classList.toggle('complete');
+          completeList = [...cards];
       }
     endTimer();
     const showStats = setTimeout(showModal, 700);
@@ -171,17 +175,28 @@ function endTimer() {
   console.log(seconds + " seconds"); //remove this once completion page is in place
 }
 
+function showModal() {
+  modal.style.display ='block';
+  const resetBtn = document.querySelector('.reset-me');
+  console.log(resetBtn);
+  resetBtn.addEventListener('click', gameReset, false);
+}
+
 function gameReset() {
   startTime = undefined;
   endTime = undefined;
-  startGame();
+  numMoves = 0;
+  console.log('test');
+  modal.style.display ='none';
 
+  const cls = ['complete', 'open', 'show', 'match'];
+  const elements = completeList;
+  for (var i = 0; i < completeList.length; i++) {
+    completeList[i].classList.remove(...cls);
+  }
+  // reset variables
+  completeList = [];
+  numMatches = 0;
+  numClicks = 0;
+  const restartGame = setTimeout(startGame, 250);
 }
-
-// completion page needs to include numMoves = 0 after posting
-
-function showModal() {
-  //need to add modal content
-  modal.style.display='block';
-}
-
