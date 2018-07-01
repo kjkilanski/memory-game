@@ -14,18 +14,28 @@
 //
 const card = document.getElementsByClassName('card');
 const cards = [...card];
+const modal = document.querySelector('.modal');
+
 let numMoves = 0;
 let numMatches = 0;
+let numClicks = 0;
 let openList = [];
+let startTime;
+let endTime;
 
+/* The startGame() function starts the game
+* The function creates a new deck based on the CSS class 'deck', the ul with the class 'deck';
+* Then the functions assigns a new variable that returns the shuffled cards, which correspond to the 'li' with the class 'cards'
+* Next a for loop creates a new deck based on the shuffled cards, with each new card being added to the .deck ul.
+*/
 function startGame() {
 
   const deck = document.querySelector('.deck');
   const cardShuffle = shuffle(cards);
   for (var i = 0; i < cardShuffle.length; i++){
         deck.appendChild(cardShuffle[i]);
-
      }
+     eventListeners();
   }
 
 startGame();
@@ -47,7 +57,6 @@ function shuffle(array) {
 }
 
 
-
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
@@ -59,34 +68,41 @@ function shuffle(array) {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
- function flipCard() {
-   this.classList.toggle('open');
-   this.classList.toggle('show');
 
+ function eventListeners(){
+   const clicks = 0;
+
+   for (var i = 0; i < cards.length; i++){
+      cards[i].addEventListener('click', clickCount, false);
+      cards[i].addEventListener('click', matchCards, false);
+   };
  }
 
+ function flipCard() {
+   cardSelection.classList.toggle('open');
+   cardSelection.classList.toggle('show');
 
- for (var i = 0; i < cards.length; i++){
-   //need to prevent third click
-    cards[i].addEventListener('click', flipCard, false);
-    cards[i].addEventListener('click', matchCards, false);
-    cards[0].addEventListener('click', startTimer, false);
- };
-
-
+ }
 
 // Create an array and check for match
 
 function matchCards() {
+  cardSelection = this;
   openList.push(this);
-  console.log(openList);
+  //prevent flipping on click for third card
+  if (openList.length <= 2) {
+    flipCard();
+  }
+
+//console.log(openList.length + ' openList');
   if (openList.length === 2) {
     moveCounter();
-    console.log(numMoves);
+    console.log(numMoves + ' moves');
     if (openList[0].firstElementChild.className == openList[1].firstElementChild.className) {
       match();
+      openList = [];
     } else {
-        const resetTimer = setTimeout(reset, 1500);
+        const resetTimer = setTimeout(reset, 1000);
     }
   }
 }
@@ -106,13 +122,13 @@ function match() {
   openList[0].classList.toggle('match');
   openList[1].classList.toggle('match');
   numMatches++;
-
+ console.log(numMatches);
   if (numMatches == 8) {
       for (var i = 0; i < cards.length; i++) {
           cards[i].classList.toggle('complete');
       }
-
-    end();
+    endTimer();
+    const showStats = setTimeout(showModal, 700);
   }
   openList = [];
 }
@@ -126,17 +142,25 @@ function moveCounter() {
 /*
 * Time counter for counting the amount of time from the first selection to when all cards match
 * This code has been adapted from a solution at https://stackoverflow.com/questions/41632942/how-to-measure-time-elapsed-on-javascript
-* Changes to the code include updating to 'let' rather than 'var', and changing function names to something more consistent with my own style
+* Changes to the code include adding a click counter, updating to 'let' rather than 'var', and changing function names to something more consistent with my own style
 */
 
-let startTime;
-let endTime;
+
+
+function clickCount() {
+  numClicks++;
+  if (numClicks === 1) {
+    startTimer();
+  }
+
+}
 
 function startTimer() {
   startTime = new Date();
+  console.log(startTime);
 };
 
-function end() {
+function endTimer() {
   endTime = new Date();
   let timeDiff = endTime - startTime; //in ms
   // strip the ms
@@ -147,7 +171,17 @@ function end() {
   console.log(seconds + " seconds"); //remove this once completion page is in place
 }
 
+function gameReset() {
+  startTime = undefined;
+  endTime = undefined;
+  startGame();
 
+}
 
+// completion page needs to include numMoves = 0 after posting
 
+function showModal() {
+  //need to add modal content
+  modal.style.display='block';
+}
 
