@@ -17,7 +17,12 @@ const card = document.getElementsByClassName('card');
 const cards = [...card];
 const modal = document.querySelector('.modal');
 const resetBtn = document.getElementsByClassName('reset-me');
-const clicks = 0;
+const oneStar = document.querySelector('one-star');
+const twoStar = document.querySelector('two-star');
+const threeStar = document.querySelector('three-star');
+
+// 
+// const clicks = 0;
 
 let cardSelection;
 let cls;
@@ -29,7 +34,7 @@ let completeList = [];
 let startTime;
 let endTime;
 let seconds;
-
+let starRating;
 
 /* The startGame() function starts the game
 * The function creates a new deck based on the CSS class 'deck', the ul with the class 'deck';
@@ -107,6 +112,13 @@ function matchCards() {
 //console.log(openList.length + ' openList');
   if (openList.length === 2) {
     moveCounter();
+    if (numMoves === 1) {
+      document.querySelector('.moves').innerHTML = numMoves + ' Move';
+    } else {
+      document.querySelector('.moves').innerHTML = numMoves + ' Moves';
+    }
+    stars();
+
     console.log(numMoves + ' moves');
     if (openList[0].firstElementChild.className == openList[1].firstElementChild.className) {
       match();
@@ -132,7 +144,7 @@ function match() {
   openList[0].classList.toggle('match');
   openList[1].classList.toggle('match');
   numMatches++;
- console.log(numMatches);
+  console.log(numMatches);
   if (numMatches == 8) {
       for (var i = 0; i < cards.length; i++) {
 
@@ -185,9 +197,14 @@ function endTimer() {
 
 function showModal() {
   modal.style.display ='block';
+  //get ids for modal heading display
   document.getElementById('clicks').innerHTML = numClicks;
-  document.getElementById('moves').innerHTML = numMoves;
+  document.getElementById('modal-moves').innerHTML = numMoves;
   document.getElementById('time').innerHTML = seconds;
+  //get classes for modal display
+  document.querySelector('.moves-stat').innerHTML = numMoves;
+  document.querySelector('.time-stat').innerHTML = seconds + ' seconds';
+  document.querySelector('.star-stat').innerHTML = starRating;
   //resetBtn.addEventListener('click', gameReset, false);
 }
 
@@ -212,5 +229,17 @@ function gameReset() {
 
   completeList = [];
   const restartGame = setTimeout(startGame, 250);
+
+}
+
+function stars() {
+  if (numMoves <= 10) {
+    starRating = 3;
+
+  } else if (numMoves > 10 && numMoves <= 15) {
+    starRating = 2;
+  } else {
+    starRating = 1;
+  }
 
 }
