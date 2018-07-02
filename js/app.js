@@ -1,47 +1,43 @@
 /*
  * Create a list that holds all of your cards
  */
-// const card = document.getElementsByClassName('card');
-// const cards = [...card];
-//
-// /*
-//  * Display the cards on the page
-//  *   - shuffle the list of cards using the provided "shuffle" method below
-//  *   - loop through each card and create its HTML
-//  *   - add each card's HTML to the page
-//  */
-// const deck = document.querySelector('.deck');
-//
+
+/*
+ * Display the cards on the page
+ *   - shuffle the list of cards using the provided "shuffle" method below
+ *   - loop through each card and create its HTML
+ *   - add each card's HTML to the page
+ */
+
 const deck = document.querySelector('.deck');
 const card = document.getElementsByClassName('card');
 const cards = [...card];
 const modal = document.querySelector('.modal');
 const resetBtn = document.getElementsByClassName('reset-me');
-const oneStar = document.querySelector('one-star');
-const twoStar = document.querySelector('two-star');
-const threeStar = document.querySelector('three-star');
-
-// 
-// const clicks = 0;
+const allStar = document.getElementsByClassName('fa-star');
+const allStars = [...allStar];
 
 let cardSelection;
 let cls;
 let numMoves = 0;
 let numMatches = 0;
 let numClicks = 0;
+let numStars = 0;
 let openList = [];
 let completeList = [];
 let startTime;
 let endTime;
 let seconds;
-let starRating;
 
 /* The startGame() function starts the game
 * The function creates a new deck based on the CSS class 'deck', the ul with the class 'deck';
 * Then the functions assigns a new variable that returns the shuffled cards, which correspond to the 'li' with the class 'cards'
 * Next a for loop creates a new deck based on the shuffled cards, with each new card being added to the .deck ul.
 */
+
 function startGame() {
+  stars();
+  document.querySelector('.moves').innerHTML = '0 Moves';
 
   const cardShuffle = shuffle(cards);
   for (var i = 0; i < cardShuffle.length; i++){
@@ -68,7 +64,6 @@ function shuffle(array) {
 
 }
 
-
 /*
  * set up the event listener for a card. If a card is clicked:
  *  - display the card's symbol (put this functionality in another function that you call from this one)
@@ -80,10 +75,8 @@ function shuffle(array) {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
-
  function eventListeners(){
    for (let i = 0; i < cards.length; i++){
-      cards[i].addEventListener('click', clickCount, false);
       cards[i].addEventListener('click', matchCards, false);
       for (let i =0; i < resetBtn.length; i++) {
         resetBtn[i].addEventListener('click', gameReset, false);
@@ -98,9 +91,9 @@ function shuffle(array) {
 
  }
 
-// Create an array and check for match
-
+// Create an array, flip card, check for match, and count clicks
 function matchCards() {
+  clickCount();
   cardSelection = this;
   openList.push(this);
 
@@ -176,12 +169,11 @@ function clickCount() {
   if (numClicks === 1) {
     startTimer();
   }
-
 }
 
 function startTimer() {
   startTime = new Date();
-  console.log(startTime);
+  // console.log(startTime);
 };
 
 function endTimer() {
@@ -192,20 +184,24 @@ function endTimer() {
   // get seconds
   seconds = Math.round(timeDiff);
   console.log(seconds + " seconds"); //remove this once completion page is in place
+
   return seconds;
+
+  // see if you can differentiate between seconds and minutes
 }
 
 function showModal() {
   modal.style.display ='block';
+
   //get ids for modal heading display
   document.getElementById('clicks').innerHTML = numClicks;
   document.getElementById('modal-moves').innerHTML = numMoves;
   document.getElementById('time').innerHTML = seconds;
+
   //get classes for modal display
   document.querySelector('.moves-stat').innerHTML = numMoves;
   document.querySelector('.time-stat').innerHTML = seconds + ' seconds';
-  document.querySelector('.star-stat').innerHTML = starRating;
-  //resetBtn.addEventListener('click', gameReset, false);
+  document.querySelector('.star-stat').innerHTML = numStars;
 }
 
 
@@ -222,24 +218,30 @@ function gameReset() {
   for (var i = 0; i < cards.length; i++) {
     cards[i].classList.remove(...cls);
   }
-
   for (var i = 0; i < completeList.length; i++) {
     completeList[i].classList.remove(...cls);
   }
-
   completeList = [];
   const restartGame = setTimeout(startGame, 250);
-
 }
 
 function stars() {
   if (numMoves <= 10) {
-    starRating = 3;
-
-  } else if (numMoves > 10 && numMoves <= 15) {
-    starRating = 2;
+    numStars = 3;
+    for (var i = 0; i < numStars; i++) {
+      allStars[i].style.display = 'inline-block';
+    }
+  } else if (numMoves > 10 && numMoves <= 17) {
+    numStars = 2;
+    console.log(numStars);
+    for (var i = 1; i < numStars; i++) {
+      console.log(i);
+      allStars[i].style.display = 'none';
+    }
   } else {
-    starRating = 1;
+    numStars = 1;
+    for (var i = 0; i < numStars; i++) {
+      allStars[i].style.display = 'none';
+    }
   }
-
 }
