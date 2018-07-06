@@ -82,12 +82,29 @@
         </ul>
     </div>
 
+
     <div class="modal" id="modal">
+      <div class="modal-button">
+        <button type="button" class="close" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
       <div class="modal-content">
+
         <h1 class='modal-heading'>Congratulations! You WON!</h1>
-        <h2 class='modal-subheading'>It took you <i id="clicks"></i> clicks, <i id="modal-moves"></i> moves, and <i id="time"></i> seconds to win!</h2>
+        <h2 class='modal-subheading'>It took you <i id="modal-moves"></i> moves & <i id="time"></i> seconds to win!</h2>
         <div class='modal-table'>
-          <div class='number-moves'>
+          <div class="column-one">
+            <div class="stat-moves">Moves: </div>
+            <div class="stat-time">Time: </div>
+            <div class="stat-stars">Stars: </div>
+          </div>
+          <div class="column-two">
+            <div class="moves-stat">Moves: </div>
+            <div class="time-stat">Time: </div>
+            <div class="star-stat">Stars: </div>
+          </div>
+          <!-- <div class='number-moves'>
             <div class="stat-moves">Moves: </div>
             <div class="moves-stat"></div>
           </div>
@@ -98,10 +115,11 @@
           <div class='number-stars'>
             <div class="stat-stars">Stars: </div>
             <div class="star-stat"></div>
-          </div>
-          <div class='reset-me'>
-            Reset
-          </div>
+          </div> -->
+
+        </div>
+        <div class='reset-me modal-reset'>
+          Reset
         </div>
       </div>
     </div>

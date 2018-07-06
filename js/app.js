@@ -230,7 +230,7 @@ function showModal() {
   modal.style.display ='block';
 
   //get ids for modal heading display
-  document.getElementById('clicks').innerHTML = numClicks;
+  //document.getElementById('clicks').innerHTML = numClicks;
   document.getElementById('modal-moves').innerHTML = numMoves;
   document.getElementById('time').innerHTML = seconds;
 
