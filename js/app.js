@@ -132,7 +132,6 @@ function reset() {
         openList = [];
 }
 
-
 function match() {
   openList[0].classList.toggle('match');
   openList[1].classList.toggle('match');
@@ -155,15 +154,6 @@ function moveCounter() {
   return numMoves;
 }
 
-
-/*
-* Time counter for counting the amount of time from the first selection to when all cards match
-* This code has been adapted from a solution at https://stackoverflow.com/questions/41632942/how-to-measure-time-elapsed-on-javascript
-* Changes to the code include adding a click counter, updating to 'let' rather than 'var', and changing function names to something more consistent with my own style
-*/
-
-
-
 function clickCount() {
   numClicks++;
   if (numClicks === 1) {
@@ -171,10 +161,15 @@ function clickCount() {
   }
 }
 
+/*
+* Time counter for counting the amount of time from the first selection to when all cards match
+* This code has been adapted from a solution at https://stackoverflow.com/questions/41632942/how-to-measure-time-elapsed-on-javascript
+* Changes to the code include adding a click counter, updating to 'let' rather than 'var', and changing function names to something more consistent with my own style
+*/
+
 function startTimer() {
   startTime = new Date();
-  // console.log(startTime);
-};
+}
 
 function endTimer() {
   endTime = new Date();
@@ -188,41 +183,6 @@ function endTimer() {
   return seconds;
 
   // see if you can differentiate between seconds and minutes
-}
-
-function showModal() {
-  modal.style.display ='block';
-
-  //get ids for modal heading display
-  document.getElementById('clicks').innerHTML = numClicks;
-  document.getElementById('modal-moves').innerHTML = numMoves;
-  document.getElementById('time').innerHTML = seconds;
-
-  //get classes for modal display
-  document.querySelector('.moves-stat').innerHTML = numMoves;
-  document.querySelector('.time-stat').innerHTML = seconds + ' seconds';
-  document.querySelector('.star-stat').innerHTML = numStars;
-}
-
-
-function gameReset() {
-  // reset variables and display; restart game
-  startTime = undefined;
-  endTime = undefined;
-  numMoves = 0;
-  numMatches = 0;
-  numClicks = 0;
-  modal.style.display ='none';
-  cls = ['complete', 'open', 'show', 'match'];
-
-  for (var i = 0; i < cards.length; i++) {
-    cards[i].classList.remove(...cls);
-  }
-  for (var i = 0; i < completeList.length; i++) {
-    completeList[i].classList.remove(...cls);
-  }
-  completeList = [];
-  const restartGame = setTimeout(startGame, 250);
 }
 
 function stars() {
@@ -244,4 +204,38 @@ function stars() {
       allStars[i].style.display = 'none';
     }
   }
+}
+
+function gameReset() {
+  // reset variables and display; restart game
+  startTime = undefined;
+  endTime = undefined;
+  numMoves = 0;
+  numMatches = 0;
+  numClicks = 0;
+  modal.style.display ='none';
+  cls = ['complete', 'open', 'show', 'match'];
+
+  for (var i = 0; i < cards.length; i++) {
+    cards[i].classList.remove(...cls);
+  }
+  for (var i = 0; i < completeList.length; i++) {
+    completeList[i].classList.remove(...cls);
+  }
+  completeList = [];
+  const restartGame = setTimeout(startGame, 250);
+}
+
+function showModal() {
+  modal.style.display ='block';
+
+  //get ids for modal heading display
+  document.getElementById('clicks').innerHTML = numClicks;
+  document.getElementById('modal-moves').innerHTML = numMoves;
+  document.getElementById('time').innerHTML = seconds;
+
+  //get classes for modal display
+  document.querySelector('.moves-stat').innerHTML = numMoves;
+  document.querySelector('.time-stat').innerHTML = seconds + ' seconds';
+  document.querySelector('.star-stat').innerHTML = numStars;
 }
