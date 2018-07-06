@@ -227,7 +227,7 @@ cursor: pointer;
 }
 
 /* The Close Button */
-.close {
+#close {
     color: #fff;
     float: right;
     margin-right: 15px;

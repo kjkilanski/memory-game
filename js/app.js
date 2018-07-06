@@ -16,14 +16,18 @@ const modal = document.querySelector('.modal');
 const resetBtn = document.getElementsByClassName('reset-me');
 const allStar = document.getElementsByClassName('fa-star');
 const allStars = [...allStar];
+const close = document.querySelector('close');
 
 let cardSelection;
+let visibleCard;
 let cls;
 let numMoves = 0;
 let numMatches = 0;
 let numClicks = 0;
 let numStars = 0;
 let openList = [];
+let matchedList =[];
+let matchedName;
 let completeList = [];
 let startTime;
 let endTime;
@@ -75,20 +79,22 @@ function shuffle(array) {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
- function eventListeners(){
+ function eventListeners() {
    for (let i = 0; i < cards.length; i++){
       cards[i].addEventListener('click', matchCards, false);
       for (let i =0; i < resetBtn.length; i++) {
         resetBtn[i].addEventListener('click', gameReset, false);
       }
 
-   };
+   }
+   document.getElementById('close').addEventListener('click', closeModal, false);
+   // console.log(close);
+   // close[i].addEventListener('click', closeModal, false);
  }
 
  function flipCard() {
-   cardSelection.classList.toggle('open');
-   cardSelection.classList.toggle('show');
-
+   visibleCard = cardSelection.classList.toggle('open');
+   visibleCard = cardSelection.classList.toggle('show');
  }
 
 // Create an array, flip card, check for match, and count clicks
@@ -113,7 +119,9 @@ function matchCards() {
     stars();
 
     console.log(numMoves + ' moves');
-    if (openList[0].firstElementChild.className == openList[1].firstElementChild.className) {
+    if ((visibleCard == true ) && (openList[0].firstElementChild.className == openList[1].firstElementChild.className)) {
+
+      matchedList.push(matchedName);
       match();
       openList = [];
     } else {
@@ -133,9 +141,10 @@ function reset() {
 }
 
 function match() {
+
   openList[0].classList.toggle('match');
   openList[1].classList.toggle('match');
-  numMatches++;
+  numMatches = matchedList.length;
   console.log(numMatches);
   if (numMatches == 8) {
       for (var i = 0; i < cards.length; i++) {
@@ -158,6 +167,7 @@ function clickCount() {
   numClicks++;
   if (numClicks === 1) {
     startTimer();
+    console.log(numClicks);
   }
 }
 
@@ -230,7 +240,6 @@ function showModal() {
   modal.style.display ='block';
 
   //get ids for modal heading display
-  //document.getElementById('clicks').innerHTML = numClicks;
   document.getElementById('modal-moves').innerHTML = numMoves;
   document.getElementById('time').innerHTML = seconds;
 
@@ -238,4 +247,10 @@ function showModal() {
   document.querySelector('.moves-stat').innerHTML = numMoves;
   document.querySelector('.time-stat').innerHTML = seconds + ' seconds';
   document.querySelector('.star-stat').innerHTML = numStars;
+}
+
+function closeModal() {
+  modal.style.display ='none';
+  console.log('test');
+
 }
