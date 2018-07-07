@@ -188,6 +188,8 @@ h2 {
   font-size: 1em;
 }
 
+
+
 .stat-moves {
 text-align: right;
 }
@@ -215,6 +217,22 @@ margin-left: 10px;
 .star-stat {
   text-align: left;
 margin-left: 10px;
+}
+
+.column-two .stars {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    margin: 0 5px 0 0;
+}
+
+.column-two .stars li {
+    list-style: none;
+    display: inline-block;
+}
+
+.stats {
+    display: none;
 }
 
 .modal-reset {

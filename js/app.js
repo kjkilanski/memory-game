@@ -14,8 +14,12 @@ const card = document.getElementsByClassName('card');
 const cards = [...card];
 const modal = document.querySelector('.modal');
 const resetBtn = document.getElementsByClassName('reset-me');
-const allStar = document.getElementsByClassName('fa-star');
+const allStar = document.getElementsByClassName('fa fa-star');
 const allStars = [...allStar];
+const modalStar = document.getElementsByClassName('stats fa fa-star');
+const modalStars = [...modalStar];
+
+// const starDisplay = document.getElementsByClassName
 const close = document.querySelector('close');
 
 let cardSelection;
@@ -55,7 +59,6 @@ startGame();
 // Shuffle function from http://stackoverflow.com/a/2450976
 function shuffle(array) {
     var currentIndex = array.length, temporaryValue, randomIndex;
-
     while (currentIndex !== 0) {
         randomIndex = Math.floor(Math.random() * currentIndex);
         currentIndex -= 1;
@@ -88,8 +91,6 @@ function shuffle(array) {
 
    }
    document.getElementById('close').addEventListener('click', closeModal, false);
-   // console.log(close);
-   // close[i].addEventListener('click', closeModal, false);
  }
 
  function flipCard() {
@@ -111,26 +112,27 @@ function matchCards() {
 //console.log(openList.length + ' openList');
   if (openList.length === 2) {
     moveCounter();
-    if (numMoves === 1) {
-      document.querySelector('.moves').innerHTML = numMoves + ' Move';
-    } else {
-      document.querySelector('.moves').innerHTML = numMoves + ' Moves';
-    }
-    stars();
+    scorePanel();
+    // if (numMoves === 1) {
+    //   document.querySelector('.moves').innerHTML = numMoves + ' Move';
+    // } else {
+    //   document.querySelector('.moves').innerHTML = numMoves + ' Moves';
+    // }
+    // stars();
 
-    console.log(numMoves + ' moves');
     if ((visibleCard == true ) && (openList[0].firstElementChild.className == openList[1].firstElementChild.className)) {
-
       matchedList.push(matchedName);
       match();
       openList = [];
+
     } else {
         const resetTimer = setTimeout(reset, 1000);
     }
   }
 }
 
-// Reset the matched cards array
+// Reset flipped cards if cards don't match
+
 function reset() {
         cls = ['show', 'open'];
         elements = openList;
@@ -141,7 +143,7 @@ function reset() {
 }
 
 function match() {
-
+  console.log(numMatches);
   openList[0].classList.toggle('match');
   openList[1].classList.toggle('match');
   numMatches = matchedList.length;
@@ -167,7 +169,6 @@ function clickCount() {
   numClicks++;
   if (numClicks === 1) {
     startTimer();
-    console.log(numClicks);
   }
 }
 
@@ -189,35 +190,93 @@ function endTimer() {
   // get seconds
   seconds = Math.round(timeDiff);
   console.log(seconds + " seconds"); //remove this once completion page is in place
-
   return seconds;
 
   // see if you can differentiate between seconds and minutes
 }
 
+// function stars() {
+//   if (numMoves <= 12) {
+//     numStars = 3;
+//     for (var i = 0; i < numStars; i++) {
+//       allStars[i].style.display = 'inline-block';
+//
+//     }
+//   } else if (numMoves > 12 && numMoves <= 18) {
+//     numStars = 2;
+//     for (var i = 1; i < numStars; i++) {
+//       allStars[i].style.display = 'none';
+//     }
+//   } else {
+//     numStars = 1;
+//     for (var i = 0; i < numStars; i++) {
+//       allStars[i].style.display = 'none';
+//     }
+//   }
+//   return;
+// }
+
 function stars() {
-  if (numMoves <= 10) {
+  if (numMoves <= 12) {
     numStars = 3;
+  } else if (numMoves > 12 && numMoves <= 18) {
+    numStars = 2;
+  } else {
+    numStars = 1;
+  }
+
     for (var i = 0; i < numStars; i++) {
       allStars[i].style.display = 'inline-block';
     }
-  } else if (numMoves > 10 && numMoves <= 17) {
-    numStars = 2;
-    console.log(numStars);
-    for (var i = 1; i < numStars; i++) {
-      console.log(i);
-      allStars[i].style.display = 'none';
-    }
+
+  // if (numStars == 1) {
+  //   for (var i = 0; i <= numStars; i++) {
+  //     allStars[i].style.display = 'none';
+  //   }
+  // }
+  // else if (numStars == 2) {
+  //   for (var i = 1; i < numStars; i++) {
+  //   allStars[i].style.display = 'none';
+  //   }
+  // }
+  // else if (numStars == 3) {
+  //   for (var i = 0; i < numStars; i++) {
+  //     allStars[i].style.display = 'inline-block';
+  //   }
+  // }
+ return numStars;
+}
+
+
+function scorePanel() {
+
+  if (numMoves === 1) {
+    document.querySelector('.moves').innerHTML = numMoves + ' Move';
   } else {
-    numStars = 1;
-    for (var i = 0; i < numStars; i++) {
+    document.querySelector('.moves').innerHTML = numMoves + ' Moves';
+  }
+  stars();
+
+  if (numStars == 1) {
+    for (var i = 0; i <= numStars; i++) {
       allStars[i].style.display = 'none';
     }
   }
+  else if (numStars == 2) {
+    for (var i = 1; i < numStars; i++) {
+    allStars[i].style.display = 'none';
+    }
+  }
+  // else if (numStars == 3) {
+  //   for (var i = 0; i < numStars; i++) {
+  //     allStars[i].style.display = 'inline-block';
+  //   }
+  // }
 }
 
 function gameReset() {
   // reset variables and display; restart game
+  reset();
   startTime = undefined;
   endTime = undefined;
   numMoves = 0;
@@ -226,13 +285,24 @@ function gameReset() {
   modal.style.display ='none';
   cls = ['complete', 'open', 'show', 'match'];
 
+// reset values
   for (var i = 0; i < cards.length; i++) {
     cards[i].classList.remove(...cls);
   }
   for (var i = 0; i < completeList.length; i++) {
     completeList[i].classList.remove(...cls);
   }
+  for (var i = 0; i < modalStars.length; i++) {
+    modalStars[i].style.display = 'none';
+  }
+  for (var i = 0; i < allStars.length; i++) {
+    allStars[i].style.display = 'none';
+  }
+
   completeList = [];
+  matchedList = [];
+
+  // Restart game
   const restartGame = setTimeout(startGame, 250);
 }
 
@@ -246,11 +316,31 @@ function showModal() {
   //get classes for modal display
   document.querySelector('.moves-stat').innerHTML = numMoves;
   document.querySelector('.time-stat').innerHTML = seconds + ' seconds';
-  document.querySelector('.star-stat').innerHTML = numStars;
+  // document.querySelector('.star-stat').innerHTML = numStars;
+
+  if (numStars == 3) {
+    for (var i = 0; i <= numStars; i++) {
+      modalStars[i].style.display = 'inline-block';
+    }
+  }
+  else if (numStars == 2) {
+    for (var i = 0; i < numStars; i++) {
+    modalStars[i].style.display = 'inline-block';
+    }
+  }
+  else if (numStars == 1) {
+    for (var i = 0; i < numStars; i++) {
+      modalStars[i].style.display = 'inline-block';
+    }
+  }
+
 }
+
 
 function closeModal() {
   modal.style.display ='none';
-  console.log('test');
+  for (var i = 1; i < modalStars.length; i++) {
+    modalStars[i].style.display = 'none';
+  }
 
 }
