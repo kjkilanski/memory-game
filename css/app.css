@@ -356,6 +356,10 @@ h2 {
     height: 58px;
   }
 
+  .score-panel {
+    width: 265px;
+  }
+  
 }
 
 /* Screen widths 426px to 500px */
