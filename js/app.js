@@ -15,14 +15,14 @@ const close = document.querySelector('close');
 
 let cardSelection;
 let visibleCard;
-let cls;
+let cls; // CSS classes
 let numMoves = 0;
 let numMatches = 0;
 let numClicks = 0;
 let numStars = 0;
-let openList = [];
+let openList = []; // Cards that have been clicked and open, maximum is two
 let matchedList =[];
-let matchedName;
+let matchedName; // Name of set of cards that match for the matchedList array
 let completeList = [];
 let startTime;
 let endTime;
@@ -38,29 +38,30 @@ startGame();
 
 function startGame() {
   document.querySelector('.moves').innerHTML = '0 Moves';
+  const cardShuffle = shuffle(cards);
+
   for (var i = 0; i < 3; i++) {
     allStars[i].style.display = 'inline-block';
   }
-  const cardShuffle = shuffle(cards);
-  for (var i = 0; i < cardShuffle.length; i++){
-        deck.appendChild(cardShuffle[i]);
-     }
-     eventListeners();
+
+  for (var i = 0; i < cardShuffle.length; i++) {
+    deck.appendChild(cardShuffle[i]);
   }
+  eventListeners();
+
+}
 
 
-
-// Shuffle function from http://stackoverflow.com/a/2450976
+/* Shuffle function from http://stackoverflow.com/a/2450976 */
 function shuffle(array) {
-    var currentIndex = array.length, temporaryValue, randomIndex;
-    while (currentIndex !== 0) {
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
-
+  var currentIndex = array.length, temporaryValue, randomIndex;
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
+  }
     return array;
 
 }
@@ -76,16 +77,20 @@ function shuffle(array) {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
+
+/*
+* Event Listeners for when users click cards or the reset button
+*/
  function eventListeners() {
-   for (let i = 0; i < cards.length; i++){
+   for (let i = 0; i < cards.length; i++) {
       cards[i].addEventListener('click', matchCards, false);
       for (let i =0; i < resetBtn.length; i++) {
         resetBtn[i].addEventListener('click', gameReset, false);
       }
    }
    document.getElementById('close').addEventListener('click', closeModal, false);
- }
 
+}
 
 
 /*
@@ -110,47 +115,52 @@ function matchCards() {
       matchedList.push(matchedName);
       match();
       openList = [];
-
-    } else {
+      } else {
         const resetTimer = setTimeout(reset, 1000);
-    }
+      }
   }
 }
 
-// Flip the card
+// Flip the card and toggle CSS
 function flipCard() {
   visibleCard = cardSelection.classList.toggle('open');
   visibleCard = cardSelection.classList.toggle('show');
+
 }
 
 
-
+/*
+* If cards match, toggle CSS for matching cards
+* If the number of matches equals 8, mark all cards as complete, stop timer, and display modal
+*/
 function match() {
   openList[0].classList.toggle('match');
   openList[1].classList.toggle('match');
   numMatches = matchedList.length;
-  if (numMatches == 8) {
-      for (var i = 0; i < cards.length; i++) {
 
-          cards[i].classList.toggle('complete');
-          completeList = [...cards];
-      }
+  if (numMatches == 8) {
+    for (var i = 0; i < cards.length; i++) {
+        cards[i].classList.toggle('complete');
+        completeList = [...cards];
+    }
     endTimer();
     const showStats = setTimeout(showModal, 700);
   }
   openList = [];
+
 }
 
 
 // Reset flipped cards if cards don't match
-
 function reset() {
-        cls = ['show', 'open'];
-        elements = openList;
-        for (var i = 0; i < openList.length; i++) {
-          openList[i].classList.remove(...cls);
-        }
-        openList = [];
+  cls = ['show', 'open'];
+  elements = openList;
+
+  for (var i = 0; i < openList.length; i++) {
+    openList[i].classList.remove(...cls);
+  }
+  openList = [];
+
 }
 
 /*
@@ -161,16 +171,17 @@ function reset() {
 
 function startTimer() {
   startTime = new Date();
+
 }
 
 function endTimer() {
   endTime = new Date();
-  let timeDiff = endTime - startTime; // in ms
-  timeDiff /= 1000; // strip the ms
-
-  // get seconds
+  let timeDiff = endTime - startTime;
+  timeDiff /= 1000;
   seconds = Math.round(timeDiff);
+
   return seconds;
+
 }
 
 /*
@@ -180,6 +191,7 @@ function endTimer() {
 function moveCounter() {
   numMoves++;
   return numMoves;
+
 }
 
 function clickCount() {
@@ -187,14 +199,17 @@ function clickCount() {
   if (numClicks === 1) {
     startTimer();
   }
+
 }
 
 /*
 * Star counters and displays
+* scorePanel() - Show number of moves in the score panel while playing
+* stars() - Calculate number of stars based on number of moves
+* todo - It would be nice to have this be a function of both time and Moves
 */
 
 function scorePanel() {
-
   if (numMoves === 1) {
     document.querySelector('.moves').innerHTML = numMoves + ' Move';
   } else {
@@ -202,35 +217,39 @@ function scorePanel() {
   }
   stars();
 
+// Can't have zero stars, so display 'none' only changed on two
   if (numStars == 1) {
     for (var i = 0; i <= numStars; i++) {
       allStars[i].style.display = 'none';
     }
-  }
-  else if (numStars == 2) {
+  } else if (numStars == 2) {
     for (var i = 1; i < numStars; i++) {
     allStars[i].style.display = 'none';
     }
   }
+
 }
 
 function stars() {
-  if (numMoves <= 15) {
+  if (numMoves <= 11) {
     numStars = 3;
-  } else if (numMoves > 15 && numMoves <= 18) {
+  } else if (numMoves > 11 && numMoves <= 18) {
     numStars = 2;
   } else {
     numStars = 1;
   }
+  return numStars;
 
- return numStars;
 }
 
 /*
 * Modal display functions
+* showModal() - Display modal including moves, time, and number of stars
+* closeModal() - Close modal without resetting game
 */
 
 function showModal() {
+
   modal.style.display ='block';
 
   //get ids for modal heading display
@@ -257,7 +276,7 @@ function closeModal() {
 
 /*
 * Game reset
-* reset css class values, variables and display
+* Reset CSS class values, variables and display
 */
 function gameReset() {
   reset();
@@ -279,10 +298,10 @@ function gameReset() {
   for (var i = 0; i < modalStars.length; i++) {
     modalStars[i].style.display = 'none';
   }
-
   completeList = [];
   matchedList = [];
 
   // Restart game
   const restartGame = setTimeout(startGame, 250);
+
 }

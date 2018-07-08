@@ -17,6 +17,7 @@
             <h1>Matching Game</h1>
         </header>
 
+<!-- Score Panel for stars countdown, number of moves, and reset -->
         <section class="score-panel">
         	<ul class="stars">
         		<li><i class="fa fa-star one-star"></i></li>
@@ -30,6 +31,7 @@
         	</div>
         </section>
 
+<!-- Deck of Cards for the game -->
         <ul class="deck">
             <li class="card first-row">
                 <i class="fa fa-diamond"></i>
@@ -82,24 +84,29 @@
         </ul>
     </div>
 
-
+<!-- Modal Display when game is complete -->
     <div class="modal" id="modal">
+
+<!-- Button to close modal without resetting -->
       <div class="modal-button">
         <button type="button" id="close" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-content">
 
+<!-- Modal content including number of stars, number of moves, and seconds -->
+      <div class="modal-content">
         <h1 class='modal-heading'>Congratulations!</h1>
         <h2 class='modal-heading-two'>You WON!</h2>
         <h2 class='modal-subheading'>It took you <i id="modal-moves"></i> moves & <i id="time"></i> seconds to win!</h2>
+
         <div class='modal-table'>
           <div class="column-one">
             <div class="stat-moves">Moves: </div>
             <div class="stat-time">Time: </div>
             <div class="stat-stars">Stars: </div>
           </div>
+
           <div class="column-two">
             <div class="moves-stat"> </div>
             <div class="time-stat"> </div>
@@ -112,6 +119,8 @@
             </div>
           </div>
         </div>
+
+<!-- Reset Button  -->
         <div class='reset-me modal-reset'>
           Reset
         </div>
