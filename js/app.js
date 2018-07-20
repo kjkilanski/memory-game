@@ -2,31 +2,45 @@
 * Variables
 */
 
-const deck = document.querySelector('.deck');
-const card = document.getElementsByClassName('card');
-const cards = [...card];
+
 const modal = document.querySelector('.modal');
-const resetBtn = document.getElementsByClassName('reset-me');
 const allStar = document.getElementsByClassName('fa fa-star');
 const allStars = [...allStar];
 const modalStar = document.getElementsByClassName('stats fa fa-star');
 const modalStars = [...modalStar];
-const close = document.querySelector('close');
 
-let cardSelection;
-let visibleCard;
-let cls; // CSS classes
-let numMoves = 0;
-let numMatches = 0;
+// move counter
+let add = function() {
+     counter = 0;
+    return function() {
+      counter += 1;
+      return {
+        reset: function() {
+          counter = 0;
+        },
+        value: function() {
+        return counter;
+      }
+    }
+  }
+}();
+
 let numClicks = 0;
-let numStars = 0;
 let openList = []; // Cards that have been clicked and open, maximum is two
-let matchedList =[];
-let matchedName; // Name of set of cards that match for the matchedList array
+let matchedList = [];
 let completeList = [];
+
 let startTime;
 let endTime;
 let seconds;
+
+// Create the deck and cards, return values to start the game
+function cardArray() {
+  const deck = document.querySelector('.deck');
+  const card = document.getElementsByClassName('card');
+  const cards = [...card];
+  return [deck, cards];
+}
 
 startGame();
 
@@ -37,20 +51,28 @@ startGame();
 */
 
 function startGame() {
-  document.querySelector('.moves').innerHTML = '0 Moves';
+
+  // create the deck and cards, then shuffle
+  const createDeck = cardArray();
+  const deck = createDeck[0];
+  const cards = createDeck[1];
   const cardShuffle = shuffle(cards);
 
-  for (var i = 0; i < 3; i++) {
+
+  for (let i = 0; i < cardShuffle.length; i++) {
+    deck.appendChild(cardShuffle[i]);
+  }
+
+  // set moves and stars
+  document.querySelector('.moves').innerHTML = '0 Moves';
+  for (let i = 0; i < 3; i++) {
     allStars[i].style.display = 'inline-block';
   }
 
-  for (var i = 0; i < cardShuffle.length; i++) {
-    deck.appendChild(cardShuffle[i]);
-  }
+  // listen for card clicks and reset clicks
   eventListeners();
 
 }
-
 
 /* Shuffle function from http://stackoverflow.com/a/2450976 */
 function shuffle(array) {
@@ -82,8 +104,13 @@ function shuffle(array) {
 * Event Listeners for when users click cards or the reset button
 */
  function eventListeners() {
+   const createDeck = cardArray();
+   const cards = createDeck[1];
+   const resetBtn = document.getElementsByClassName('reset-me');
+
    for (let i = 0; i < cards.length; i++) {
       cards[i].addEventListener('click', matchCards, false);
+
       for (let i =0; i < resetBtn.length; i++) {
         resetBtn[i].addEventListener('click', gameReset, false);
       }
@@ -102,29 +129,34 @@ function matchCards() {
   cardSelection = this;
   openList.push(this);
 
+  let matchedNum; // Name of set of cards that match for the matchedList array
+
   //prevent flipping on click for third card
   if (openList.length <= 2) {
     flipCard();
+
   }
 
   if (openList.length === 2) {
-    moveCounter();
-    scorePanel();
-
+    numMoves = add();
+    console.log(numMoves.value());
+    scorePanel(numMoves.value());
     if ((visibleCard == true ) && (openList[0].firstElementChild.className == openList[1].firstElementChild.className)) {
-      matchedList.push(matchedName);
+      matchedList.push(matchedNum);
       match();
       openList = [];
       } else {
-        const resetTimer = setTimeout(reset, 1000);
+        const resetTimer = setTimeout(reset, 500);
       }
   }
+
 }
 
 // Flip the card and toggle CSS
 function flipCard() {
   visibleCard = cardSelection.classList.toggle('open');
   visibleCard = cardSelection.classList.toggle('show');
+  return visibleCard;
 
 }
 
@@ -134,6 +166,9 @@ function flipCard() {
 * If the number of matches equals 8, mark all cards as complete, stop timer, and display modal
 */
 function match() {
+  const createDeck = cardArray();
+  const cards = createDeck[1];
+  let numMatches = 0;
   openList[0].classList.toggle('match');
   openList[1].classList.toggle('match');
   numMatches = matchedList.length;
@@ -144,7 +179,8 @@ function match() {
         completeList = [...cards];
     }
     endTimer();
-    const showStats = setTimeout(showModal, 700);
+    let finalMoves = numMoves.value();
+    const showStats = setTimeout(showModal(finalMoves), 700);
   }
   openList = [];
 
@@ -153,8 +189,7 @@ function match() {
 
 // Reset flipped cards if cards don't match
 function reset() {
-  cls = ['show', 'open'];
-  elements = openList;
+  const cls = ['show', 'open'];
 
   for (var i = 0; i < openList.length; i++) {
     openList[i].classList.remove(...cls);
@@ -188,12 +223,6 @@ function endTimer() {
 * Move & click counters
 */
 
-function moveCounter() {
-  numMoves++;
-  return numMoves;
-
-}
-
 function clickCount() {
   numClicks++;
   if (numClicks === 1) {
@@ -209,13 +238,14 @@ function clickCount() {
 * todo - It would be nice to have this be a function of both time and Moves
 */
 
-function scorePanel() {
+function scorePanel(e) {
+  let numMoves = e;
   if (numMoves === 1) {
     document.querySelector('.moves').innerHTML = numMoves + ' Move';
   } else {
     document.querySelector('.moves').innerHTML = numMoves + ' Moves';
   }
-  stars();
+  stars(numMoves);
 
 // Can't have zero stars, so display 'none' only changed on two
   if (numStars == 1) {
@@ -230,7 +260,8 @@ function scorePanel() {
 
 }
 
-function stars() {
+function stars(e) {
+  let numMoves = e;
   if (numMoves <= 11) {
     numStars = 3;
   } else if (numMoves > 11 && numMoves <= 18) {
@@ -248,8 +279,10 @@ function stars() {
 * closeModal() - Close modal without resetting game
 */
 
-function showModal() {
+function showModal(e) {
 
+
+  numMoves = e;
   modal.style.display ='block';
 
   //get ids for modal heading display
@@ -279,16 +312,21 @@ function closeModal() {
 * Reset CSS class values, variables and display
 */
 function gameReset() {
-  reset();
+  const createDeck = cardArray();
+  const deck = createDeck[0];
+  const cards = createDeck[1];
+  const cls = ['complete', 'open', 'show', 'match'];
+
   startTime = undefined;
   endTime = undefined;
-  numMoves = 0;
-  numMatches = 0;
-  numClicks = 0;
-  modal.style.display ='none';
-  cls = ['complete', 'open', 'show', 'match'];
+  resetThis = add();
+  resetThis.reset();
 
-// reset array values
+  numClicks = 0;
+  modal.style.display = 'none';
+
+
+// reset display values
   for (var i = 0; i < cards.length; i++) {
     cards[i].classList.remove(...cls);
   }
