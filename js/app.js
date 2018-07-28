@@ -14,7 +14,7 @@ let openList = []; // Cards that have been clicked and open, maximum is two
 let matchedList = [];
 let completeList = [];
 
-
+// how to possibly reduce these: set variables in startGame(); send the values to a new function, call those functions from match game and append
 
 // move counter
 const moveCounter = function() {
@@ -35,7 +35,6 @@ const moveCounter = function() {
 // click counter
 const clickCounter = function() {
      let counter = 0;
-     startTimer();
      return function() {
         counter += 1;
         return {
@@ -48,7 +47,6 @@ const clickCounter = function() {
         }
       }
     }();
-
 
 // Create the deck and cards, return values to start the game
 function cardArray() {
@@ -113,7 +111,6 @@ function shuffle(array) {
  *    + if all cards have matched, display a message with the final score (put this functionality in another function that you call from this one)
  */
 
-
 /*
 * Event Listeners for when users click cards or the reset button
 */
@@ -121,6 +118,8 @@ function shuffle(array) {
    const createDeck = cardArray();
    const cards = createDeck[1];
    const resetBtn = document.getElementsByClassName('reset-me');
+
+   startTimer();
 
    for (let i = 0; i < cards.length; i++) {
       cards[i].addEventListener('click', matchCards, false);
@@ -135,10 +134,8 @@ function shuffle(array) {
 /*
 * Create an array for card selection, flip card, check for match, and track moves and score
 */
-
 function matchCards() {
   let clicks = clickCounter();
-
   let numMoves;
   let matchedNum;
   let visibleCard;
@@ -225,7 +222,6 @@ function reset() {
 * This code has been adapted from a solution at https://stackoverflow.com/questions/41632942/how-to-measure-time-elapsed-on-javascript
 * Changes to the code include adding a click counter, updating to 'let' rather than 'var', and changing function names to something more consistent with my own style
 */
-
 function startTimer() {
   startTime = new Date();
 
@@ -241,14 +237,12 @@ function endTimer() {
 
 }
 
-
 /*
 * Star counters and displays
 * scorePanel() - Show number of moves in the score panel while playing
 * stars() - Calculate number of stars based on number of moves
 * todo - It would be nice to have this be a function of both time and Moves
 */
-
 function scorePanel(e) {
   let numMoves = e;
 
@@ -291,7 +285,6 @@ function stars(e) {
 * showModal() - Display modal including moves, time, and number of stars
 * closeModal() - Close modal without resetting game
 */
-
 function showModal(e) {
 
   let numMoves = e;
@@ -340,7 +333,6 @@ function gameReset() {
   resetClicks = clickCounter();
   resetClicks.reset();
 
-  // numClicks = 0;
   modal.style.display = 'none';
 
 // reset display values
