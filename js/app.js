@@ -1,7 +1,8 @@
+'use strict';
+
 /*
 * Variables
 */
-
 
 const allStar = document.getElementsByClassName('fa fa-star');
 const allStars = [...allStar];
@@ -14,8 +15,7 @@ let openList = []; // Cards that have been clicked and open, maximum is two
 let matchedList = [];
 let completeList = [];
 
-// how to possibly reduce these: set variables in startGame(); send the values to a new function, call those functions from match game and append
-
+//create a counter object to account for two counters that are the same
 // move counter
 const moveCounter = function() {
      let counter = 0;
@@ -45,6 +45,19 @@ const clickCounter = function() {
             return counter;
           }
         }
+      }
+    }();
+
+const startTimer = function() {
+  let startTime = new Date();
+     return {
+          reset: function() {
+            startTime = new Date();
+          },
+          value: function() {
+            return startTime;
+          }
+
       }
     }();
 
@@ -119,7 +132,7 @@ function shuffle(array) {
    const cards = createDeck[1];
    const resetBtn = document.getElementsByClassName('reset-me');
 
-   startTimer();
+   let startTime = startTimer.value();
 
    for (let i = 0; i < cards.length; i++) {
       cards[i].addEventListener('click', matchCards, false);
@@ -197,9 +210,9 @@ function match(e) {
         cards[i].classList.toggle('complete');
         completeList = [...cards];
     }
-    endTimer();
+    let endTime = endTimer();
     let finalMoves = numMoves;
-    const showStats = setTimeout(showModal(finalMoves), 700);
+    const showStats = setTimeout(showModal(finalMoves, endTime), 700);
   }
   openList = [];
 
@@ -219,19 +232,16 @@ function reset() {
 
 /*
 * Time counter for counting the amount of time from the first selection to when all cards match
-* This code has been adapted from a solution at https://stackoverflow.com/questions/41632942/how-to-measure-time-elapsed-on-javascript
-* Changes to the code include adding a click counter, updating to 'let' rather than 'var', and changing function names to something more consistent with my own style
+* This code has been significantly adapted from a solution at https://stackoverflow.com/questions/41632942/how-to-measure-time-elapsed-on-javascript
+* Only the endtimer() function remains similar.
 */
-function startTimer() {
-  startTime = new Date();
 
-}
 
 function endTimer() {
-  endTime = new Date();
-  let timeDiff = endTime - startTime;
+  let endTime = new Date();
+  let timeDiff = endTime - startTimer.value();
   timeDiff /= 1000;
-  seconds = Math.round(timeDiff);
+  let seconds = Math.round(timeDiff);
 
   return seconds;
 
@@ -245,6 +255,7 @@ function endTimer() {
 */
 function scorePanel(e) {
   let numMoves = e;
+  let numStars;
 
   if (numMoves === 1) {
     document.querySelector('.moves').innerHTML = numMoves + ' Move';
@@ -268,6 +279,7 @@ function scorePanel(e) {
 
 function stars(e) {
   let numMoves = e;
+  let numStars;
 
   if (numMoves <= 11) {
     numStars = 3;
@@ -285,9 +297,10 @@ function stars(e) {
 * showModal() - Display modal including moves, time, and number of stars
 * closeModal() - Close modal without resetting game
 */
-function showModal(e) {
-
+function showModal(e, f) {
+  let numStars = stars(e);
   let numMoves = e;
+  let seconds = f;
   modal.style.display ='block';
 
   //get ids for modal heading display
@@ -324,7 +337,8 @@ function gameReset() {
 
   let resetMoves;
   let resetClicks;
-  startTimer();
+
+  let startTime = startTimer.reset();
   endTimer();
 
   resetMoves = moveCounter();
