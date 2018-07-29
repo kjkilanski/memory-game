@@ -242,7 +242,6 @@ function endTimer() {
   let timeDiff = endTime - startTimer.value();
   timeDiff /= 1000;
   let seconds = Math.round(timeDiff);
-
   return seconds;
 
 }
@@ -255,14 +254,14 @@ function endTimer() {
 */
 function scorePanel(e) {
   let numMoves = e;
-  let numStars;
+  let numStars = stars(numMoves);
 
   if (numMoves === 1) {
     document.querySelector('.moves').innerHTML = numMoves + ' Move';
   } else {
     document.querySelector('.moves').innerHTML = numMoves + ' Moves';
   }
-  stars(numMoves);
+
 
 // Can't have zero stars, so display 'none' only changed on two
   if (numStars == 1) {
@@ -319,9 +318,6 @@ function showModal(e, f) {
 
 function closeModal() {
   modal.style.display ='none';
-  for (var i = 1; i < modalStars.length; i++) {
-    modalStars[i].style.display = 'none';
-  }
 
 }
 
