@@ -229,7 +229,7 @@ function match(e) {
     }
     let endTime = endTimer();
     let finalMoves = numMoves;
-    const showStats = setTimeout(showModal(finalMoves, endTime), 700);
+    const showStats = setTimeout(showModal, 500, finalMoves, endTime);
   }
   openList = [];
 
