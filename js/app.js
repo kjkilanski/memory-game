@@ -12,7 +12,6 @@ const modalStar = document.getElementsByClassName('stats fa fa-star');
 const modalStars = [...modalStar];
 
 let openList = []; // Cards that have been clicked and open, maximum is two
-let matchedList = [];
 
 //create a counter object to account for two counters that are the same
 // move counter
@@ -67,6 +66,24 @@ function cardArray() {
   const cards = [...card];
   return [deck, cards];
 }
+
+const matches = function() {
+  let matchedCards = [];
+    return {
+      reset: function() {
+       matchedCards = [];
+      },
+      value: function() {
+       return matchedCards;
+     },
+      length: function() {
+       return matchedCards.length;
+     },
+      push: function() {
+        matchedCards.push(1);
+      }
+    }
+}();
 
 startGame();
 
@@ -147,11 +164,13 @@ function shuffle(array) {
 * Create an array for card selection, flip card, check for match, and track moves and score
 */
 function matchCards() {
+
   let clicks = clickCounter();
   let numMoves;
   let matchedNum;
   let visibleCard;
   let cardSelection = this;
+  let matchedList;
 
   openList.push(this);
 
@@ -167,7 +186,6 @@ function matchCards() {
 
     // If cards match, send cards to the match() function to toggle CSS and game completeness.  If cards don't match, reset the cards
     if ((visibleCard == true ) && (openList[0].firstElementChild.className == openList[1].firstElementChild.className)) {
-      matchedList.push(matchedNum);
       match(numMoves.value());
       openList = [];
       } else {
@@ -198,11 +216,12 @@ function match(e) {
   const cards = createDeck[1];
 
   let numMoves = e;
-  let numMatches = 0;
+  let numMatches;
+  let matched = matches.push();
 
   openList[0].classList.toggle('match');
   openList[1].classList.toggle('match');
-  numMatches = matchedList.length;
+  numMatches = matches.length();
 
   if (numMatches == 8) {
     for (var i = 0; i < cards.length; i++) {
@@ -331,7 +350,10 @@ function gameReset() {
 
   let resetMoves;
   let resetClicks;
+
+  let matchedList = matches.reset();
   let startTime = startTimer.reset();
+
   endTimer();
 
   resetMoves = moveCounter();
@@ -351,7 +373,7 @@ function gameReset() {
     modalStars[i].style.display = 'none';
   }
   openList = [];
-  matchedList = [];
+
 
   // Restart game
   const restartGame = setTimeout(startGame, 250);
