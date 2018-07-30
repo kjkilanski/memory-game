@@ -13,7 +13,6 @@ const modalStars = [...modalStar];
 
 let openList = []; // Cards that have been clicked and open, maximum is two
 let matchedList = [];
-let completeList = [];
 
 //create a counter object to account for two counters that are the same
 // move counter
@@ -208,7 +207,6 @@ function match(e) {
   if (numMatches == 8) {
     for (var i = 0; i < cards.length; i++) {
         cards[i].classList.toggle('complete');
-        completeList = [...cards];
     }
     let endTime = endTimer();
     let finalMoves = numMoves;
@@ -333,7 +331,6 @@ function gameReset() {
 
   let resetMoves;
   let resetClicks;
-
   let startTime = startTimer.reset();
   endTimer();
 
@@ -349,13 +346,11 @@ function gameReset() {
   for (var i = 0; i < cards.length; i++) {
     cards[i].classList.remove(...cls);
   }
-  for (var i = 0; i < completeList.length; i++) {
-    completeList[i].classList.remove(...cls);
-  }
+
   for (var i = 0; i < modalStars.length; i++) {
     modalStars[i].style.display = 'none';
   }
-  completeList = [];
+
   matchedList = [];
 
   // Restart game
