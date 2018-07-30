@@ -11,9 +11,8 @@ const modal = document.querySelector('.modal');
 const modalStar = document.getElementsByClassName('stats fa fa-star');
 const modalStars = [...modalStar];
 
-let openList = []; // Cards that have been clicked and open, maximum is two
 
-//create a counter object to account for two counters that are the same
+//TO-DO: create a counter object to account for two counters that are the same
 // move counter
 const moveCounter = function() {
      let counter = 0;
@@ -32,32 +31,72 @@ const moveCounter = function() {
 
 // click counter
 const clickCounter = function() {
-     let counter = 0;
-     return function() {
-        counter += 1;
-        return {
-          reset: function() {
-            counter = 0;
-          },
-          value: function() {
-            return counter;
-          }
-        }
-      }
-    }();
+ let counter = 0;
+ return function() {
+   counter += 1;
+   return {
+     reset: function() {
+       counter = 0;
+     },
+     value: function() {
+       return counter;
+     }
+   }
+ }
+}();
 
 const startTimer = function() {
   let startTime = new Date();
-     return {
-          reset: function() {
-            startTime = new Date();
-          },
-          value: function() {
-            return startTime;
-          }
+  return {
+    reset: function() {
+      startTime = new Date();
+    },
+    value: function() {
+      return startTime;
+    }
+  }
+}();
 
-      }
-    }();
+//TO-DO: create an array object to use for both arrays
+
+// Create array function for matches
+const cardMatches = function() {
+let matchedCards = [];
+  return {
+    reset: function() {
+      matchedCards = [];
+    },
+    value: function() {
+      return matchedCards;
+    },
+    length: function() {
+      return matchedCards.length;
+    },
+    push: function() {
+      matchedCards.push(1);
+    }
+  }
+}();
+
+// create array function for opened cards
+const openCards = function() {
+  let openedCards = [];
+  return {
+    reset: function() {
+      openedCards = [];
+    },
+    value: function() {
+      return openedCards;
+    },
+    length: function() {
+      return openedCards.length;
+    },
+    push: function(e) {
+      openedCards.push(e);
+    }
+  }
+}();
+
 
 // Create the deck and cards, return values to start the game
 function cardArray() {
@@ -66,24 +105,6 @@ function cardArray() {
   const cards = [...card];
   return [deck, cards];
 }
-
-const matches = function() {
-  let matchedCards = [];
-    return {
-      reset: function() {
-       matchedCards = [];
-      },
-      value: function() {
-       return matchedCards;
-     },
-      length: function() {
-       return matchedCards.length;
-     },
-      push: function() {
-        matchedCards.push(1);
-      }
-    }
-}();
 
 startGame();
 
@@ -125,7 +146,7 @@ function shuffle(array) {
     array[currentIndex] = array[randomIndex];
     array[randomIndex] = temporaryValue;
   }
-    return array;
+  return array;
 
 }
 
@@ -151,10 +172,10 @@ function shuffle(array) {
    let startTime = startTimer.value();
 
    for (let i = 0; i < cards.length; i++) {
-      cards[i].addEventListener('click', matchCards, false);
-      for (let i =0; i < resetBtn.length; i++) {
-        resetBtn[i].addEventListener('click', gameReset, false);
-      }
+     cards[i].addEventListener('click', matchCards, false);
+     for (let i =0; i < resetBtn.length; i++) {
+       resetBtn[i].addEventListener('click', gameReset, false);
+     }
    }
    document.getElementById('close').addEventListener('click', closeModal, false);
 
@@ -170,27 +191,25 @@ function matchCards() {
   let matchedNum;
   let visibleCard;
   let cardSelection = this;
-  let matchedList;
-
-  openList.push(this);
+  openCards.push(this);
 
   //prevent flipping on click for third card
-  if (openList.length <= 2) {
+  if (openCards.length() <= 2) {
     visibleCard = flipCard(cardSelection);
   }
 
   // If two cards are flipped, start move counter, keep score in score panel, and check for match.
-  if (openList.length === 2) {
+  if (openCards.length() === 2) {
     numMoves = moveCounter();
     scorePanel(numMoves.value());
 
     // If cards match, send cards to the match() function to toggle CSS and game completeness.  If cards don't match, reset the cards
-    if ((visibleCard == true ) && (openList[0].firstElementChild.className == openList[1].firstElementChild.className)) {
+    if ((visibleCard == true ) && (openCards.value()[0].firstElementChild.className == openCards.value()[1].firstElementChild.className)) {
       match(numMoves.value());
-      openList = [];
-      } else {
-        const resetTimer = setTimeout(reset, 500);
-      }
+      openCards.reset();
+    } else {
+      const resetTimer = setTimeout(reset, 500);
+    }
   }
 
 }
@@ -217,11 +236,11 @@ function match(e) {
 
   let numMoves = e;
   let numMatches;
-  let matched = matches.push();
+  cardMatches.push();
 
-  openList[0].classList.toggle('match');
-  openList[1].classList.toggle('match');
-  numMatches = matches.length();
+  openCards.value()[0].classList.toggle('match');
+  openCards.value()[1].classList.toggle('match');
+  numMatches = cardMatches.length();
 
   if (numMatches == 8) {
     for (var i = 0; i < cards.length; i++) {
@@ -231,19 +250,18 @@ function match(e) {
     let finalMoves = numMoves;
     const showStats = setTimeout(showModal, 300, finalMoves, endTime);
   }
-  openList = [];
+  openCards.reset();
 
 }
 
 // Reset flipped cards if cards don't match
 function reset() {
-
   const cls = ['show', 'open'];
 
-  for (var i = 0; i < openList.length; i++) {
-    openList[i].classList.remove(...cls);
+  for (var i = 0; i < openCards.length(); i++) {
+    openCards.value()[i].classList.remove(...cls);
   }
-  openList = [];
+  openCards.reset();
 
 }
 
@@ -351,16 +369,13 @@ function gameReset() {
   let resetMoves;
   let resetClicks;
 
-  let matchedList = matches.reset();
-  let startTime = startTimer.reset();
+  openCards.reset();
+  cardMatches.reset();
+  startTimer.reset();
 
-  endTimer();
+  resetMoves = moveCounter().reset();
 
-  resetMoves = moveCounter();
-  resetMoves.reset();
-
-  resetClicks = clickCounter();
-  resetClicks.reset();
+  resetClicks = clickCounter().reset();
 
   modal.style.display = 'none';
 
@@ -372,8 +387,6 @@ function gameReset() {
   for (var i = 0; i < modalStars.length; i++) {
     modalStars[i].style.display = 'none';
   }
-  openList = [];
-
 
   // Restart game
   const restartGame = setTimeout(startGame, 250);
