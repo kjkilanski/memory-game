@@ -1,31 +1,20 @@
 'use strict';
 
-/*
-* Variables
-*/
-
-
-
-const modal = document.querySelector('.modal');
-const modalStar = document.getElementsByClassName('stats fa fa-star');
-const modalStars = [...modalStar];
-
-
-//TO-DO: create a counter object to account for two counters that are the same
+/* TO-DO: create a counter object */
 // move counter
 const moveCounter = function() {
   let counter = 0;
   return function() {
     counter += 1;
-  return {
-    reset: function() {
-      counter = 0;
-    },
-    value: function() {
-      return counter;
-    }
-  }
-}
+    return {
+      reset: function() {
+        counter = 0;
+      },
+      value: function() {
+        return counter;
+      }
+    };
+  };
 }();
 
 // click counter
@@ -40,8 +29,8 @@ const clickCounter = function() {
      value: function() {
        return counter;
      }
-   }
- }
+   };
+ };
 }();
 
 const startTimer = function() {
@@ -53,10 +42,10 @@ const startTimer = function() {
     value: function() {
       return startTime;
     }
-  }
+  };
 }();
 
-//TO-DO: create an array object to use for both arrays
+/* TO-DO: create an array object to use for both arrays */
 
 // Create array function for matches
 const cardMatches = function() {
@@ -74,7 +63,7 @@ let matchedCards = [];
     push: function() {
       matchedCards.push(1);
     }
-  }
+  };
 }();
 
 // create array function for opened cards
@@ -93,7 +82,7 @@ const openCards = function() {
     push: function(e) {
       openedCards.push(e);
     }
-  }
+  };
 }();
 
 
@@ -105,20 +94,26 @@ function cardArray() {
   return [deck, cards];
 }
 
-// Create an array for stars
+// Create an array for star
 function starsArray() {
   const allStar = document.getElementsByClassName('fa fa-star');
   const allStars = [...allStar];
-  return allStars;
+  const modalStar = document.getElementsByClassName('stats fa fa-star');
+  const modalStars = [...modalStar];
+  return [allStars, modalStars];
 }
 
-
+// function modal() {
+//
+//
+//
+// }
 startGame();
 
 /* The startGame() function starts the game
-* The function creates a new deck based on the CSS class 'deck', the ul with the class 'deck';
-* Then the functions assigns a new variable that returns the shuffled cards, which correspond to the 'li' with the class 'cards'
-* Next a for loop creates a new deck based on the shuffled cards, with each new card being added to the .deck ul.
+* The function creates a new deck
+* Then assigns a new variable that returns the shuffled cards
+* A new deck is created from the shuffled cards
 */
 
 function startGame() {
@@ -127,7 +122,7 @@ function startGame() {
   const deck = createDeck[0];
   const cards = createDeck[1];
   const cardShuffle = shuffle(cards);
-  const allStars = starsArray();
+  const allStars = starsArray()[0];
 
   for (let i = 0; i < cardShuffle.length; i++) {
     deck.appendChild(cardShuffle[i]);
@@ -274,8 +269,7 @@ function reset() {
 }
 
 /*
-* Time counter for counting the amount of time from the first selection to when all cards match
-* This code has been significantly adapted from a solution at https://stackoverflow.com/questions/41632942/how-to-measure-time-elapsed-on-javascript
+* Adapted from: https://stackoverflow.com/questions/41632942/how-to-measure-time-elapsed-on-javascript
 * Only the endtimer() function remains similar.
 */
 
@@ -296,7 +290,7 @@ function endTimer() {
 * todo - It would be nice to have this be a function of both time and Moves
 */
 function scorePanel(e) {
-  const allStars = starsArray();
+  const allStars = starsArray()[0];
   let numMoves = e;
   let numStars = stars(numMoves);
 
@@ -342,6 +336,8 @@ function stars(e) {
 * closeModal() - Close modal without resetting game
 */
 function showModal(e, f) {
+  const modal = document.querySelector('.modal');
+  const modalStars = starsArray()[1];
   let numStars = stars(e);
   let numMoves = e;
   let seconds = f;
@@ -362,6 +358,7 @@ function showModal(e, f) {
 }
 
 function closeModal() {
+  const modal = document.querySelector('.modal');
   modal.style.display ='none';
 
 }
@@ -374,7 +371,11 @@ function gameReset() {
   const createDeck = cardArray();
   const deck = createDeck[0];
   const cards = createDeck[1];
+
   const cls = ['complete', 'open', 'show', 'match'];
+  const modalStars = starsArray()[1];
+
+  closeModal();
 
   let resetMoves;
   let resetClicks;
@@ -386,8 +387,6 @@ function gameReset() {
   resetMoves = moveCounter().reset();
 
   resetClicks = clickCounter().reset();
-
-  modal.style.display = 'none';
 
 // reset display values
   for (var i = 0; i < cards.length; i++) {
