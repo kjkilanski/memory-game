@@ -350,7 +350,7 @@ function gameReset() {
   for (var i = 0; i < modalStars.length; i++) {
     modalStars[i].style.display = 'none';
   }
-
+  openList = [];
   matchedList = [];
 
   // Restart game
