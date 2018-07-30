@@ -4,8 +4,7 @@
 * Variables
 */
 
-const allStar = document.getElementsByClassName('fa fa-star');
-const allStars = [...allStar];
+
 
 const modal = document.querySelector('.modal');
 const modalStar = document.getElementsByClassName('stats fa fa-star');
@@ -15,19 +14,19 @@ const modalStars = [...modalStar];
 //TO-DO: create a counter object to account for two counters that are the same
 // move counter
 const moveCounter = function() {
-     let counter = 0;
-     return function() {
-        counter += 1;
-        return {
-          reset: function() {
-            counter = 0;
-          },
-          value: function() {
-            return counter;
-          }
-        }
-      }
-    }();
+  let counter = 0;
+  return function() {
+    counter += 1;
+  return {
+    reset: function() {
+      counter = 0;
+    },
+    value: function() {
+      return counter;
+    }
+  }
+}
+}();
 
 // click counter
 const clickCounter = function() {
@@ -106,6 +105,14 @@ function cardArray() {
   return [deck, cards];
 }
 
+// Create an array for stars
+function starsArray() {
+  const allStar = document.getElementsByClassName('fa fa-star');
+  const allStars = [...allStar];
+  return allStars;
+}
+
+
 startGame();
 
 /* The startGame() function starts the game
@@ -120,6 +127,7 @@ function startGame() {
   const deck = createDeck[0];
   const cards = createDeck[1];
   const cardShuffle = shuffle(cards);
+  const allStars = starsArray();
 
   for (let i = 0; i < cardShuffle.length; i++) {
     deck.appendChild(cardShuffle[i]);
@@ -288,8 +296,10 @@ function endTimer() {
 * todo - It would be nice to have this be a function of both time and Moves
 */
 function scorePanel(e) {
+  const allStars = starsArray();
   let numMoves = e;
   let numStars = stars(numMoves);
+
 
   if (numMoves === 1) {
     document.querySelector('.moves').innerHTML = numMoves + ' Move';
